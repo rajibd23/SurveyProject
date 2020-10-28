@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v4.1.1">
+    <title>Polls App</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'survey/bootstrap-4.5.3-dist/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'survey/style.css' %}" />
+</head>
+<body>
+{% include 'survey/header.html' %}
+  <div class="jumbotron">
+    <div class="container">
+
+
+        {% block main_content %}
+        {% endblock %}
+        <br><br>
+        {% include 'survey/footer.html' %}
+    </div>
+  </div>
+</body>
+</html>

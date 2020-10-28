@@ -1,0 +1,21 @@
+{% extends 'survey/base.html' %}
+
+{% block main_content %}
+ <div class="row">
+
+<h4>{{ html }}</h4>
+     <br><br>
+ </div>
+<div class="row">
+<form  method="post" novalidate="True">
+   {% csrf_token %}
+    <div class="form-group">
+            <table>
+                {{ form.as_table }}
+            </table>
+            <input type="submit" class="btn btn-success my-2 my-sm-0" value="Submit"/>
+
+    </div>
+</form>
+</div>
+{% endblock %}

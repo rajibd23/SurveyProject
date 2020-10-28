@@ -1,0 +1,43 @@
+{% extends 'survey/base.html' %}
+
+{% block main_content %}
+ <h1 class="display-4">Survey for Elder Care Project</h1>
+<div>
+    <p>
+        We are a group of professionals who are located in different parts of the world.
+        All of us lately experienced different kinds of challenges managing our parents since we are all located at different places.
+        We deeply believe that this is a bigger problem which need to be addressed. To understand better if this is indeed a generic issue, we are running this survey to understand your view point.
+    </p>
+</div>
+{% if error_message %} <code><p><strong>{{error_message}}</strong></p></code>{% endif %}
+    <form action = "needsurvey/" name='firstQForm' method="post">
+        {% csrf_token %}
+        <div class="form-group">
+
+{% if latest_questions %}
+        <ul>
+            {% for question in latest_questions %}
+                {% if question.id == 1 %}
+                    <li><b>{{question.question_text}}</b></li>
+                    {% for choice in question.choice_set.all %}
+
+                        <input type="radio" name="choice" id="choice{{forloop.counter}}" value="{{choice.id}}" />
+                        <label for="choice{{forloop.counter}}">{{choice.choice_text}}</label><br>
+
+                    {% endfor %}
+                {% endif %}
+
+           {% endfor %}
+        </ul>
+            <label for="comment"><b>If your answer is "Yes" and still you would like to leave your advise :</b></label>
+            <textarea class="form-control" rows="5" id="comment"></textarea>
+            <input type="submit" class="btn btn-success my-2 my-sm-0" value="Submit"/>
+
+        </div>
+    </form>
+
+{% else %}
+    <p>You don't have any questions. Please add questions.</p>
+{% endif %}
+<script>document.getElementById("choice2").checked = true;</script>
+{% endblock %}
