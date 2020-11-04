@@ -1,43 +1,91 @@
 {% extends 'survey/base.html' %}
 
 {% block main_content %}
- <h1 class="display-4">Survey for Elder Care Project</h1>
-<div>
-    <p>
-        We are a group of professionals who are located in different parts of the world.
-        All of us lately experienced different kinds of challenges managing our parents since we are all located at different places.
-        We deeply believe that this is a bigger problem which need to be addressed. To understand better if this is indeed a generic issue, we are running this survey to understand your view point.
-    </p>
+<!--
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+  <h1 class="display-4">Survey for Elder Care Project</h1>
+        <p class="lead">
+            We are a group of professionals who are located in different parts of the world.
+            All of us lately experienced different kinds of challenges managing our parents since we are all located at different places.
+            We deeply believe that this is a bigger problem which need to be addressed. To understand better if this is indeed a generic issue, we are running this survey to understand your view point.
+        </p>
+
 </div>
+-->
+
+
+        <div class="container">
+                <div class="col-xl-8 col-lg-6 col-md-6 col-sm-8 mx-auto text-center form p-1">
+                    <div class="px-2">
 {% if error_message %} <code><p><strong>{{error_message}}</strong></p></code>{% endif %}
-    <form action = "needsurvey/" name='firstQForm' method="post">
+    <form action = "/needsurvey/" name='firstQForm' method="post" class="" novalidate="True">
         {% csrf_token %}
         <div class="form-group">
-
+            <div class="form-row">
+                <label for="name">Name :</label>
+                <input type="text" class="form-control" name="name" onfocus="this.value=''" value="Enter your name" required>
+            </div>
+             <div class="form-row" align="left">
+                <code>  {{ error_name }}</code>
+            </div>
+        </div>
+         <div class="form-group">
+            <div class="form-row">
+                <label for="email">Email Id :</label>
+                <input type="email" class="form-control" name="email" onfocus="this.value=''" value="abc@gmail.com" required>
+            </div>
+              <div class="form-row" align="left">
+                <code>  {{ error_email }}</code>
+            </div>
+         </div>
 {% if latest_questions %}
-        <ul>
+
+            <hr class="mb-4">
+               <div class="form-group">
+
             {% for question in latest_questions %}
                 {% if question.id == 1 %}
-                    <li><b>{{question.question_text}}</b></li>
+                <div class="form-row">
+                    {{question.question_text}}
+                </div>
+
                     {% for choice in question.choice_set.all %}
+                <div class="form-check">
+                       <input class="form-check-input" type="radio" name="choice" id="choice{{forloop.counter}}" value="{{choice.id}}" checked>
+                       <label for="choice{{forloop.counter}}">
+                            {{choice.choice_text}}
+                        </label>
+                 </div>
+                     {% endfor %}
 
-                        <input type="radio" name="choice" id="choice{{forloop.counter}}" value="{{choice.id}}" />
-                        <label for="choice{{forloop.counter}}">{{choice.choice_text}}</label><br>
-
-                    {% endfor %}
                 {% endif %}
-
            {% endfor %}
-        </ul>
-            <label for="comment"><b>If your answer is "Yes" and still you would like to leave your advise :</b></label>
-            <textarea class="form-control" rows="5" id="comment"></textarea>
-            <input type="submit" class="btn btn-success my-2 my-sm-0" value="Submit"/>
+            </div>
+            <hr class="mb-4">
 
-        </div>
+                <div class="form-group">
+                    <div class="form-row">
+                    <label for="comment">If your answer is "Yes" and still you would like to leave your advise :</label>
+                    <textarea class="form-control" rows="3" name='comment' id="comment"></textarea>
+                    </div>
+
+                </div>
+
+                <input type="submit" class="btn btn-primary btn-md btn-block" value="Submit"/>
+
+
     </form>
+                </div>
+            </div>
+        </div>
+
+
 
 {% else %}
     <p>You don't have any questions. Please add questions.</p>
 {% endif %}
-<script>document.getElementById("choice2").checked = true;</script>
+<script>
+document.getElementById("choice2").checked = true;
+</script>
+
 {% endblock %}

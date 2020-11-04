@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'survey/base.html' %}
+
+{% block main_content %}
+ <div class="row">
+
 {% if error_message %} <code><p><strong>{{error_message}}</strong></p></code>{% endif %}
-Thank you for your time to complete this survey.
-</body>
-</html>
+<h4> Thank you <i>{{ form.name.value }}{{ name }}</i> for your time to complete this survey. </h4>
+ </div>
+{% endblock %}

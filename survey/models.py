@@ -52,3 +52,12 @@ class SurveyResponse(models.Model):
 
     def __str__(self):
         return self.name
+
+class NoSurveyResponse(models.Model):
+    name = models.CharField(max_length=200)
+    emailid = models.CharField(max_length=100)
+    comments = models.CharField(max_length=250, default='Enter Comment')
+    res_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name

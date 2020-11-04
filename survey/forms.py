@@ -12,6 +12,7 @@ class FirstForm(forms.Form):
     comment = forms.CharField(widget=forms.Textarea)
 
 class SecondForm(forms.Form):
+
     latest_questions = Question.objects.order_by('id')
     q3_choice = [
         (0,'Medicine procurement'),
@@ -20,10 +21,10 @@ class SecondForm(forms.Form):
         (3, 'Local transport'),
         (4, 'Other Utilities'),
     ]
-    q4_choice = [
+    q4_choice = (
         (0, 'Yes'),
         (1, 'No'),
-    ]
+    )
     q7_choice = [
         (0,'Have fulltime help'),
         (1, 'Thru Whatsapp'),
@@ -54,8 +55,10 @@ class SecondForm(forms.Form):
         (1, 'Rs. 5000 to Rs. 7000'),
         (2, 'Rs. 7000 to Rs. 10000'),
     ]
-    name = forms.CharField(label='Your Name :', max_length=100, error_messages={'required': 'Please enter your name'})
+    name = forms.CharField(label='Your Name :',  max_length=100,  error_messages={'required': 'Please enter your name'})
     email = forms.EmailField(label='Your Email Id :', error_messages={'required': 'Please enter your email id'})
+
+    #q16 = forms.ChoiceField(label='Test Question :', widget=forms.RadioSelect(),choices=q4_choice)
 
     for question in latest_questions:
         if question.seq == 2:
@@ -69,9 +72,9 @@ class SecondForm(forms.Form):
             label=question.question_text+' :',
         )
         elif question.seq == 4:
-            q4 = forms.CharField(label=question.question_text+' :', widget=forms.RadioSelect(choices=q4_choice))
+            q4 = forms.ChoiceField(label=question.question_text+' :', widget=forms.RadioSelect(),choices=q4_choice)
         elif question.seq == 5:
-            q5 = forms.CharField(label=question.question_text+' :', widget=forms.RadioSelect(choices=q4_choice))
+            q5 = forms.ChoiceField(label=question.question_text+' :', widget=forms.RadioSelect(),choices=q4_choice)
         elif question.seq == 6:
             q6 = forms.CharField(label=question.question_text+' :', max_length=200, error_messages={'required': 'Please enter'})
         elif question.seq == 7:
@@ -83,7 +86,7 @@ class SecondForm(forms.Form):
             label=question.question_text+' :',
         )
         elif question.seq == 8:
-            q8 = forms.CharField(label=question.question_text+' :', widget=forms.RadioSelect(choices=q4_choice))
+            q8 = forms.ChoiceField(label=question.question_text+' :', widget=forms.RadioSelect(),choices=q4_choice)
         elif question.seq == 9:
             q9 = forms.MultipleChoiceField(
             choices=q9_choice,
@@ -93,11 +96,11 @@ class SecondForm(forms.Form):
             label=question.question_text+' :',
         )
         elif question.seq == 10:
-            q10 = forms.CharField(label=question.question_text+' :', widget=forms.RadioSelect(choices=q4_choice))
+            q10 = forms.ChoiceField(label=question.question_text+' :', widget=forms.RadioSelect(),choices=q4_choice)
         elif question.seq == 11:
-            q11 = forms.CharField(label=question.question_text+' :', widget=forms.RadioSelect(choices=q4_choice))
+            q11 = forms.ChoiceField(label=question.question_text+' :', widget=forms.RadioSelect(),choices=q4_choice)
         elif question.seq == 12:
-            q12 = forms.CharField(label=question.question_text+' :', widget=forms.RadioSelect(choices=q4_choice))
+            q12 = forms.ChoiceField(label=question.question_text+' :', widget=forms.RadioSelect(),choices=q4_choice)
         elif question.seq == 13:
             q13 = forms.MultipleChoiceField(
             choices=q13_choice,
@@ -107,7 +110,7 @@ class SecondForm(forms.Form):
             label=question.question_text+' :',
         )
         elif question.seq == 14:
-            q14 = forms.CharField(label=question.question_text+' :', widget=forms.Textarea())
+            q14 = forms.CharField(label=question.question_text+' :', widget=forms.Textarea(attrs={'rows': '3'}))
         elif question.seq == 15:
             q15 = forms.MultipleChoiceField(
             choices=q15_choice,

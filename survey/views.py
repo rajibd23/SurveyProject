@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.http import request
@@ -9,9 +10,11 @@ from django.utils import timezone
 from django.views import generic
 
 from . import forms
-from .models import Question, SurveyResponse
+from .models import Question, SurveyResponse, NoSurveyResponse
 from . forms import FirstForm
 from . forms import SecondForm
+
+
 
 # Create your views here.
 def index(request):
@@ -30,10 +33,11 @@ def index(request):
 
 
 def detail(request):
-
+    form = forms.SecondForm()
+    # When user is submitting the survey form
     if request.method == 'POST':
         form = forms.SecondForm(request.POST)
-        print(form['q4'].value)
+
         if form.is_valid():
 
             mdl = SurveyResponse.objects.create(name=form.cleaned_data['name'], emailid=form.cleaned_data['email'],
@@ -44,11 +48,32 @@ def detail(request):
                                                 question8=form.cleaned_data['q10'],question9=form.cleaned_data['q11'],
                                                 question10=form.cleaned_data['q12'],question11=form.cleaned_data['q13'],
                                                 question12=form.cleaned_data['q15'],comments=form.cleaned_data['q14'])
-        mdl.save()
-        html = 'Thank you for your survey!!!'
+
+            mdl.save()
+            status = ''
+            html = 'Thank you for your survey!!!'
+        #    return render(request, 'survey/thankyou.html', {'html': html, 'form': form,'message':messages})
+        # When is_valid() failed
+        else:
+            form.fields['name'].widget.attrs.update({'class':"form-control"})
+            form.fields['email'].widget.attrs.update({'class':"form-control"})
+            form.fields['q2'].widget.attrs.update({'class':"form-control"})
+            form.fields['q3'].widget.attrs.update({'class':"form-control"})
+            form.fields['q6'].widget.attrs.update({'class':"form-control"})
+            form.fields['q7'].widget.attrs.update({'class':"form-control"})
+            form.fields['q9'].widget.attrs.update({'class':"form-control"})
+            form.fields['q13'].widget.attrs.update({'class':"form-control"})
+            form.fields['q14'].widget.attrs.update({'class':"form-control"})
+            form.fields['q15'].widget.attrs.update({'class':"form-control"})
+            html = 'Welcome to the survey'
+            status = 'failure'
+
+        return render(request, 'survey/detail.html', {'html': html, 'status': status,'form': form})
+    # User comes for the 1st time to the Survey form
     else:
         html = 'Welcome to the survey'
-    return render(request, 'survey/detail.html', {'html': html, 'form': form})
+        status = 'new'
+        return render(request, 'survey/detail.html', {'html': html, 'form': form, 'status': status})
     #return render(request, 'survey/detail.html', context)
 
 def results(request, question_id):
@@ -68,14 +93,78 @@ def vote(request, question_id):
 
 def needSurvey(request):
     selected_choice = request.POST.get("choice")
-    print(selected_choice)
+    name = request.POST.get("name")
+
+    email = request.POST.get("email")
+
+    comment = request.POST.get("comment")
+
+    if name != "" and email !="":
     #try:
-    if selected_choice == '2':
-        return HttpResponseRedirect(reverse('survey:detail',))
+        if selected_choice == '2':
+            form2 = forms.SecondForm()
+
+            form2.fields['name'].widget.attrs.update({
+                'value': name, 'class':"form-control"
+            })
+            form2.fields['email'].widget.attrs.update({
+                'value': email, 'class':"form-control"
+            })
+            form2.fields['q2'].widget.attrs.update({
+              'class':"form-control"
+            })
+            form2.fields['q3'].widget.attrs.update({
+              'class':"form-control"
+            })
+            form2.fields['q6'].widget.attrs.update({
+              'class':"form-control"
+            })
+            form2.fields['q7'].widget.attrs.update({
+              'class':"form-control"
+            })
+            form2.fields['q9'].widget.attrs.update({
+              'class':"form-control"
+            })
+            form2.fields['q13'].widget.attrs.update({
+              'class':"form-control"
+            })
+            form2.fields['q14'].widget.attrs.update({
+              'class':"form-control"
+            })
+            form2.fields['q15'].widget.attrs.update({
+              'class':"form-control"
+            })
+            html = 'Welcome to the survey'
+            status = 'new'
+
+            return render(request, 'survey/detail.html', {'html': html, 'form': form2,'status':status})
+            #return HttpResponseRedirect(reverse('survey:detail',))
+        else:
+            if request.method == 'POST':
+                mdl = NoSurveyResponse.objects.create(name=name,
+                                                      emailid=email,
+                                                      comments=comment)
+                mdl.save()
+                html = 'Thank you for your survey!!!'
+                return render(request, 'survey/thankyou.html', {'html': html, 'name': name})
+            else:
+                html = 'There is some issue with the Survey. Sorry!!!'
+                return render(request, 'survey/thankyou.html', {'html': html, 'name': name})
     else:
-        return render(request, 'survey/thankyou.html', {'error_message': "Please select a choice2"})
+        html = 'Welcome to the survey - Blank'
+        latest_questions = Question.objects.order_by('id')
+        error_name = ""
+        error_email = ""
+        if name == "":
+            error_name = 'Name is a required field.'
+        if email == "":
+            error_email = 'Email is required.'
+        status = 'new'
+        return render(request, 'survey/index.html', {'html': html, 'latest_questions': latest_questions,'error_name':error_name, 'error_email':error_email,'status':status})
+
     #except:
     #    return render(request, 'survey/thankyou.html', {'error_message': "Please select a choice2"})
     #else:
      #   return render(request, 'survey/thankyou.html', {'error_message': "Please select a choice3"})
+
 
